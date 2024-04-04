@@ -89,3 +89,14 @@ UTC+06,BST,Bangladesh Standard Time
 UTC+11,BST,Bougainville Standard Time
 UTC+01,BST,British Standard Time from Mar 1968 to Oct 1971)
 ```
+
+Any case is understood:
+
+```
+ksandom@delli:~$ timezone2offset nzdt
+UTC+13  NZDT  New Zealand Daylight Time
+ksandom@delli:~$ timezone2offset NzDt
+UTC+13  NZDT  New Zealand Daylight Time
+ksandom@delli:~$ timezone2offset NZDT
+UTC+13  NZDT  New Zealand Daylight Time
+```

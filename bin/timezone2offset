@@ -95,7 +95,7 @@ function readFromSTDIN
 
 function lookup
 {
-    local timezone="$1"
+    local timezone="$(echo "$1" | tr '[:lower:]' '[:upper:]')"
 
     grep "^$timezone," "$processedData"
 }
