@@ -100,3 +100,20 @@ UTC+13  NZDT  New Zealand Daylight Time
 ksandom@delli:~$ timezone2offset NZDT
 UTC+13  NZDT  New Zealand Daylight Time
 ```
+
+If you want to run the output through another program, but want to have the user formatting, you can do so like this:
+
+```
+ksandom@delli:~$ echo "BST" | timezone2offset
+UTC+01  BST  British Standard Time from Mar 1968 to Oct 1971)
+UTC+06  BST  Bangladesh Standard Time
+UTC+11  BST  Bougainville Standard Time
+
+ksandom@delli:~$ echo "BST" | timezone2offset | grep -v Brit
+UTC+06,BST,Bangladesh Standard Time
+UTC+11,BST,Bougainville Standard Time
+
+ksandom@delli:~$ echo "BST" | timezone2offset | grep -v Brit | timezone2offset reformat
+UTC+06  BST  Bangladesh Standard Time
+UTC+11  BST  Bougainville Standard Time
+```
