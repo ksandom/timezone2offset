@@ -102,10 +102,14 @@ function lookup
 
 getData
 
-if [ "$1" == "" ]; then
-    readFromSTDIN | format
-elif [ "$1" == "reformat" ]; then
-    reformat
-else
-    lookup "$1" | format
-fi
+case "$1" in
+    "") # No parameters. Use STDIN.
+        readFromSTDIN | format
+    ;;
+    "reformat") # Run the CSV data through the user formatting. Useful if you've piped it through some other tools.
+        reformat
+    ;;
+    *) # Everything else. Assume it's a timezone.
+        lookup "$1" | format
+    ;;
+esac
