@@ -153,6 +153,8 @@ case "$1" in
         cat "$processedData" | format
     ;;
     *) # Everything else. Assume it's a timezone.
-        lookup "$1" | format
+        for timezone in $@; do
+            lookup "$timezone"
+        done | format
     ;;
 esac

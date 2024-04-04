@@ -107,6 +107,15 @@ UTC+11     BST           Bougainville Standard Time
 
 ```
 
+You can also do that like this:
+
+```
+ksandom@delli:~$ tz2t nzdt nzst
+Offset  Abbreviation  Description                Approx time
+UTC+12  NZST          New Zealand Standard Time  11:44
+UTC+13  NZDT          New Zealand Daylight Time  12:44
+```
+
 You can pipe the output to another program, and it will send it in CSV format:
 
 ```

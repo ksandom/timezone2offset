@@ -3,4 +3,4 @@
 
 srcDir="$(dirname "$0")"
 
-"$srcDir"/tz2o "$1" | "$srcDir"/o2t | "$srcDir"/tz2o reformat
+"$srcDir"/tz2o "$@" | "$srcDir"/o2t | "$srcDir"/tz2o reformat
