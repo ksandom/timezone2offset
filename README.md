@@ -117,3 +117,19 @@ ksandom@delli:~$ echo "BST" | tz2o | grep -v Brit | tz2o reformat
 UTC+06  BST  Bangladesh Standard Time
 UTC+11  BST  Bougainville Standard Time
 ```
+
+You can list everything:
+
+```
+ksandom@delli:~$ tz2o all
+UTC−12            IDLW   UTC-12|International Date Line West time zone
+UTC−12            BIT    Baker Island Time
+UTC−11            SST    Samoa Standard Time
+UTC−11            NUT    Niue Time
+UTC−10            TAHT   Tahiti Time
+UTC−10            SDT    Samoa Daylight Time
+UTC−10            HST    Hawaii–Aleutian Standard Time
+UTC−10            CKT    Cook Island Time
+UTC−09            HDT    Hawaii–Aleutian Daylight Time
+<...snipped for conciseness>
+```

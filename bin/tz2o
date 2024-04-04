@@ -109,6 +109,9 @@ case "$1" in
     "reformat") # Run the CSV data through the user formatting. Useful if you've piped it through some other tools.
         reformat
     ;;
+    "all")
+        cat "$processedData" | format
+    ;;
     *) # Everything else. Assume it's a timezone.
         lookup "$1" | format
     ;;
