@@ -186,3 +186,27 @@ UTC-01  EGT           Eastern Greenland Time                 22:27 yesterday
 UTC-01  CVT           Cape Verde Time                        22:27 yesterday
 UTC-01  AZOT          Time in Portugal|Azores Standard Time  22:27 yesterday
 ```
+
+You can quickly grab your own currently active timezone:
+
+```
+ksandom@delli:~$ tz2t me
+Offset  Abbreviation  Description                   Approx time
+UTC+02  CEST          Central European Summer Time  01:50
+```
+
+Or all the timezones that have the same offset as yours:
+
+```
+ksandom@delli:~$ tz2t same
+Offset  Abbreviation  Description                                                    Approx time
+UTC+02  CAT           Central Africa Time                                            01:50
+UTC+02  CEST          Central European Summer Time                                   01:50
+UTC+02  EET           Eastern European Time                                          01:50
+UTC+02  HAEC          Heure Avancée d'Europe Centrale French-language name for CEST  01:50
+UTC+02  IST           Israel Standard Time                                           01:50
+UTC+02  KALT          Kaliningrad Time                                               01:50
+UTC+02  MEST          Middle European Summer Time (''same zone as CEST'')            01:50
+UTC+02  SAST          South African Standard Time                                    01:50
+UTC+02  WAST          West Africa Summer Time                                        01:50
+```

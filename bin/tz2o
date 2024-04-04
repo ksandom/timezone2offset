@@ -149,6 +149,14 @@ case "$1" in
     "reformat") # Run the CSV data through the user formatting. Useful if you've piped it through some other tools.
         reformat
     ;;
+    "same") # Display other timezones that are the same as yours.
+        myOffset="$(date +%z)"
+        lookup "${myOffset:0:3}" | format
+    ;;
+    "me") # Display your own timezone.
+        myOffset="$(date +%Z)"
+        lookup "$myOffset" | format
+    ;;
     "all")
         cat "$processedData" | format
     ;;
