@@ -1,0 +1,111 @@
+#!/bin/bash
+# Derive the UTC offset for a given timezone.
+
+data=/tmp/tzList.html
+trimmedData=/tmp/trimmedTzList
+processedData=/tmp/tzList.csv
+cleanup="true"
+
+function makeOneLine
+{
+    spareLine=""
+
+    while read -r activeLine; do
+        if [ "${activeLine::1}" == '0' ]; then
+            spareLine="$activeLine"
+        else
+            echo "$(echo "$spareLine" | cut -b3-),$(echo "$activeLine" | cut -b3-)"
+        fi
+    done
+}
+
+function prependOffset
+{
+    while read -r line; do
+        offset="$(echo "$line" | sed 's/.*UTC//g')"
+        echo "$offset,$line"
+    done
+}
+
+function transformData
+{
+    sed 's/&lt;.*;\/ref>//g;s/| /0,/g;s/|data-sort-value=".*\[/1,/g;s/\]//g;s/ .*\[/,/g;s/ *|0//g'
+}
+
+function getData
+{
+    if [ ! -e "$processedData" ]; then
+        # Get the raw data.
+        wget "https://en.wikipedia.org/w/index.php?title=List_of_time_zone_abbreviations&action=edit" -O "$data" >&2
+
+        # Trim out just the stuff we want.
+        grep -A100000 "Abbr|Abbr.|Abbreviation" "$data" | grep -B100000 'colspan=3|Source:&lt;ref' | grep '^|\(data-sort\| \)' > "$trimmedData"
+
+        # Make it readable.
+        cat "$trimmedData" | transformData | makeOneLine > "$processedData"
+
+        # Clean up the stuff that we don't need.
+        if [ "$cleanup" == "true" ]; then
+            rm -f "$data" "$trimmedData"
+        fi
+    fi
+}
+
+function format
+{
+    {
+        while read -r line; do
+            echo "$line"
+        done
+    } | sed 's/,/\t/g' | {
+        if [ -t 1 ]; then
+            # Terminal.
+            awk -F"\t" 'BEGIN {OFS = FS} {print $3, $1, $2}' | correctSort | createTable
+        else
+            # Piped somewhere else.
+            awk -F"\t" 'BEGIN {OFS = ","} {print $3, $1, $2}'
+        fi
+    }
+}
+
+function reformat
+{
+    sed 's/,/\t/g' | correctSort | createTable
+}
+
+function correctSort
+{
+    local data="$(cat -)"
+
+    echo "$data" | grep 'UTC\(-\|−\)' | sort -r
+    echo "$data" | grep 'UTC+' | sort
+}
+
+function createTable
+{
+    column -t -s"$(echo -e "\t")"
+}
+
+function readFromSTDIN
+{
+    while read -r timezone; do
+        lookup "$timezone"
+    done
+}
+
+function lookup
+{
+    local timezone="$1"
+
+    grep "^$timezone," "$processedData"
+}
+
+getData
+
+if [ "$1" == "" ]; then
+    readFromSTDIN | format
+elif [ "$1" == "reformat" ]; then
+    reformat
+else
+    lookup "$1" | format
+fi
