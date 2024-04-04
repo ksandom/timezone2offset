@@ -29,7 +29,7 @@ function prependOffset
 
 function transformData
 {
-    sed 's/&lt;.*;\/ref>//g;s/| /0,/g;s/|data-sort-value=".*\[/1,/g;s/\]//g;s/ .*\[/,/g;s/ *|0//g'
+    sed 's/&lt;.*;\/ref>//g;s/| /0,/g;s/|data-sort-value=".*\[/1,/g;s/\]//g;s/ .*\[/,/g;s/ *|0//g;s/−/-/g'
 }
 
 function getData
@@ -54,17 +54,24 @@ function getData
 function format
 {
     {
-        echo "Abbreviation,Description,Offset"
+        read -r firstLine
+
+        if [ "${firstLine:0:6}" != "Abbrev" ]; then
+            echo "Abbreviation,Description,Offset"
+        fi
+
+        echo "$firstLine"
+
         while read -r line; do
             echo "$line"
         done
     } | sed 's/,/\t/g' | {
         if [ -t 1 ]; then
             # Terminal.
-            awk -F"\t" 'BEGIN {OFS = FS} {print $3, $1, $2}' | correctSort | createTable
+            awk -F"\t" 'BEGIN {OFS = FS} {print $3, $4, $1, $2}' | correctSort | createTable
         else
             # Piped to somewhere else.
-            awk -F"\t" 'BEGIN {OFS = ","} {print $3, $1, $2}'
+            awk -F"\t" 'BEGIN {OFS = ","} {print $3 $4, $1, $2}'
         fi
     }
 }

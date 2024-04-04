@@ -14,6 +14,28 @@ UTC−05  CST           Cuba Standard Time
 UTC+08  CST           Time in China|China Standard Time
 ```
 
+Get that same information with an approximate time:
+
+```
+ksandom@delli:~$ date
+Fri  5 Apr 01:03:07 CEST 2024
+ksandom@delli:~$ tz2t CST
+Offset  Abbreviation  Description                              Approx time
+UTC-06  CST           Central Standard Time (Central America)  17:03 yesterday
+UTC-05  CST           Cuba Standard Time                       18:03 yesterday
+UTC+08  CST           Time in China|China Standard Time        07:03
+```
+
+I say "approximate" because minutes are not yet taken into account. So some timezones will be a little off. That current looks like this (with a `*`):
+
+```
+UTC+12            TVT           Tuvalu Time                                                    11:07
+UTC+12            WAKT          Wake Island Time                                               11:07
+UTC+13:45         CHADT         Chatham Daylight Time                                          12:07*
+UTC+13            NZDT          New Zealand Daylight Time                                      12:07
+UTC+13            PHOT          Phoenix Island Time                                            12:07
+```
+
 You can pipe a whole load of timezones at once:
 
 ```

@@ -1,0 +1,72 @@
+#!/bin/bash
+# Offset to time.
+
+myOffset="$(date +%z)"
+myODirection="${myOffset:0:1}"
+myOHour="${myOffset:1:2}"
+myOMinute="${myOffset:3:2}"
+
+myTime="$(date +%H:%M)"
+myTHour="${myTime:0:2}"
+myTMinute="${myTime:3:2}"
+
+# echo "My offset: $myOffset $myODirection $myOHour $myOMinute  $myTime $myTHour $myTMinute"
+
+function applyOffset
+{
+    if [ "$1" == "" ]; then
+        echo "$myTime"
+    elif [ "${1:0:3}" == '±00' ]; then
+        echo "$myTime"
+    else
+        # This is overly simplistic and doesn't take minutes into account.
+        itemDirection="${1:0:1}"
+        hourOffset="$(echo "${1:0:3}" | sed 's/-0/-/g;s/+0/+/g')"
+        minuteOffset="${1:3:2}"
+
+        # Calculate the approximate time.
+        utcHour="$(($myTHour - $myODirection$myOHour))"
+        itemHour="$(($utcHour + $hourOffset))"
+
+        # Apply the bounds.
+        note=""
+        finalHour=$itemHour
+        if [ "$itemHour" -gt 23 ]; then
+            note=" tomorrow"
+            finalHour="$(($itemHour - 24))"
+        fi
+
+        if [ "$itemHour" -lt 0 ]; then
+            note=" yesterday"
+            finalHour="$(($itemHour + 24))"
+        fi
+
+        # Format it for 24 hour time.
+        if [ "$finalHour" -lt 10 ]; then
+            formattedHour="0$finalHour"
+        else
+            formattedHour="$finalHour"
+        fi
+
+        ## Warn if there are minutes in the timezone, because these are currently not taken into account.
+        minuteWarning=""
+        if [ "$minuteOffset" != '' ]; then
+            minuteWarning="*"
+        fi
+
+        echo "$formattedHour:$myTMinute$minuteWarning$note"
+    fi
+}
+
+function processInput
+{
+    read -r firstLine
+    echo "$firstLine,Approx time"
+
+    while read -r line; do
+        offset="$(echo "$line" | cut -d, -f1 | sed 's/UTC//g')"
+        echo "$line,$(applyOffset "$offset")"
+    done
+}
+
+processInput
