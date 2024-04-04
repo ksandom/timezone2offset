@@ -84,7 +84,7 @@ UTC+11     BST  Bougainville Standard Time
 You can pipe the output to another program, and it will send it in CSV format:
 
 ```
-ksandom@delli:~$ echo "BST" | timezone2offset | cat -
+ksandom@delli:~$ timezone2offset BST | cat -
 UTC+06,BST,Bangladesh Standard Time
 UTC+11,BST,Bougainville Standard Time
 UTC+01,BST,British Standard Time from Mar 1968 to Oct 1971)
