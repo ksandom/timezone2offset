@@ -102,11 +102,41 @@ function readFromSTDIN
     done
 }
 
+function prefixOffset
+{
+    # Make sure that the offset is properly formatted before we try searching for it.
+    if [ "${1:0:1}" == '+' ] || [ "${1:0:1}" == '-' ]; then
+        if [ "${1:2:1}" == '' ]; then
+            echo "${1:0:1}0${1:1:1}"
+        else
+            echo "$1"
+        fi
+    else
+        if [ "${1:1:1}" == '' ]; then
+            echo "0${1:0:1}"
+        else
+            echo "$1"
+        fi
+    fi
+}
+
 function lookup
 {
-    local timezone="$(echo "$1" | tr '[:lower:]' '[:upper:]')"
 
-    grep "^$timezone," "$processedData"
+    if [ "${1:0:1}" == '+' ] || [ "${1:0:1}" == '-' ]; then
+        local offset="$(prefixOffset "$1")"
+        grep "UTC$offset$" "$processedData"
+    elif [ "${1:2:1}" == '' ]; then
+        local offset="$(prefixOffset "$1")"
+        if [ "$offset" == '0' ]; then
+            grep "UTC.00" "$processedData"
+        else
+            grep "UTC+$offset$" "$processedData"
+        fi
+    else
+        local timezone="$(echo "$1" | tr '[:lower:]' '[:upper:]')"
+        grep "^$timezone," "$processedData"
+    fi
 }
 
 getData

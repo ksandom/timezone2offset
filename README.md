@@ -167,3 +167,13 @@ UTC−10            CKT           Cook Island Time
 UTC−09            HDT           Hawaii–Aleutian Daylight Time
 <...snipped for conciseness>
 ```
+
+You can search by offsets as well:
+
+```
+ksandom@delli:~$ tz2t -1
+Offset  Abbreviation  Description                            Approx time
+UTC-01  EGT           Eastern Greenland Time                 22:27 yesterday
+UTC-01  CVT           Cape Verde Time                        22:27 yesterday
+UTC-01  AZOT          Time in Portugal|Azores Standard Time  22:27 yesterday
+```
