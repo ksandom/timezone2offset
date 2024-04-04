@@ -7,7 +7,7 @@ A command line tool to get a sorted list of UTC offsets from a list of timezone 
 You can give it a single parameter:
 
 ```
-ksandom@delli:~$ timezone2offset CST
+ksandom@delli:~$ tz2o CST
 UTC−06  CST  Central Standard Time (Central America)
 UTC−05  CST  Cuba Standard Time
 UTC+08  CST  Time in China|China Standard Time
@@ -47,7 +47,7 @@ ksandom@delli:~$ echo "  GMT
   CNT
   AGT
   BET
-  CAT " | timezone2offset
+  CAT " | tz2o
 UTC−11     SST  Samoa Standard Time
 UTC−10     HST  Hawaii–Aleutian Standard Time
 UTC−09:30  MIT  Marquesas Islands Time
@@ -84,7 +84,7 @@ UTC+11     BST  Bougainville Standard Time
 You can pipe the output to another program, and it will send it in CSV format:
 
 ```
-ksandom@delli:~$ timezone2offset BST | cat -
+ksandom@delli:~$ tz2o BST | cat -
 UTC+06,BST,Bangladesh Standard Time
 UTC+11,BST,Bougainville Standard Time
 UTC+01,BST,British Standard Time from Mar 1968 to Oct 1971)
@@ -93,27 +93,27 @@ UTC+01,BST,British Standard Time from Mar 1968 to Oct 1971)
 Any case is understood:
 
 ```
-ksandom@delli:~$ timezone2offset nzdt
+ksandom@delli:~$ tz2o nzdt
 UTC+13  NZDT  New Zealand Daylight Time
-ksandom@delli:~$ timezone2offset NzDt
+ksandom@delli:~$ tz2o NzDt
 UTC+13  NZDT  New Zealand Daylight Time
-ksandom@delli:~$ timezone2offset NZDT
+ksandom@delli:~$ tz2o NZDT
 UTC+13  NZDT  New Zealand Daylight Time
 ```
 
 If you want to run the output through another program, but want to have the user formatting, you can do so like this:
 
 ```
-ksandom@delli:~$ echo "BST" | timezone2offset
+ksandom@delli:~$ echo "BST" | tz2o
 UTC+01  BST  British Standard Time from Mar 1968 to Oct 1971)
 UTC+06  BST  Bangladesh Standard Time
 UTC+11  BST  Bougainville Standard Time
 
-ksandom@delli:~$ echo "BST" | timezone2offset | grep -v Brit
+ksandom@delli:~$ echo "BST" | tz2o | grep -v Brit
 UTC+06,BST,Bangladesh Standard Time
 UTC+11,BST,Bougainville Standard Time
 
-ksandom@delli:~$ echo "BST" | timezone2offset | grep -v Brit | timezone2offset reformat
+ksandom@delli:~$ echo "BST" | tz2o | grep -v Brit | tz2o reformat
 UTC+06  BST  Bangladesh Standard Time
 UTC+11  BST  Bougainville Standard Time
 ```
