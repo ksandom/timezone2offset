@@ -29,7 +29,7 @@ function prependOffset
 
 function transformData
 {
-    sed 's/&lt;.*;\/ref>//g;s/| /0,/g;s/|data-sort-value=".*\[/1,/g;s/\]//g;s/ .*\[/,/g;s/ *|0//g;s/−/-/g'
+    sed 's/&lt;.*;\/ref>//g;s/| /0,/g;s/|data-sort-value=".*\[/1,/g;s/\]//g;s/ .*\[/,/g;s/ *|0//g;s/−/-/g;s/|UTC±00//g'
 }
 
 function getData
@@ -87,6 +87,7 @@ function correctSort
 
     echo "$data" | head -n1
     echo "$data" | grep 'UTC\(-\|−\)' | sort -r
+    echo "$data" | grep -v '\(Offset\|UTC\(+\|-\|−\)\)' | sort
     echo "$data" | grep 'UTC+' | sort
 }
 
@@ -128,7 +129,7 @@ function lookup
         grep "UTC$offset$" "$processedData"
     elif [ "${1:2:1}" == '' ]; then
         local offset="$(prefixOffset "$1")"
-        if [ "$offset" == '0' ]; then
+        if [ "$offset" == '00' ]; then
             grep "UTC.00" "$processedData"
         else
             grep "UTC+$offset$" "$processedData"
