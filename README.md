@@ -1,6 +1,6 @@
 # timezone2offset
 
-Get a sorted list of UTC offsets from a list of timezone abbreviations.
+A command line tool to get a sorted list of UTC offsets from a list of timezone abbreviations.
 
 ## Examples
 
