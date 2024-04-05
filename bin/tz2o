@@ -1,5 +1,16 @@
 #!/bin/bash
-# Derive the UTC offset for a given timezone.
+# List offset, timezone, and description from a provided timezone or offset.
+# Syntax: $0 timezoneOrOptions
+#
+# timezone is generally a few letters. Eg:
+#   NZDT
+#   BST
+# Or an offset
+#   +1
+#   -5
+
+
+## End of internal documentation. ##
 
 data=/tmp/tzList.html
 trimmedData=/tmp/trimmedTzList
@@ -140,13 +151,38 @@ function lookup
     fi
 }
 
+function showHelp
+{
+    startFrom=1
+    if [ "$1" == '--noHeader' ]; then
+        startFrom=2
+    fi
+
+    # Show the internal documentation.
+    {
+        grep -B1000 '## End of internal documentation. ##' "$0" |
+            grep '^#' |
+            grep -v '^#!' |
+            grep -v '##' |
+            cut -b3-
+    } | sed 's/\$0/'"$(basename "$0")"'/g' | tail -n+"$startFrom"
+
+    # Show the options available.
+    echo -e "\nOptions:"
+    {
+        grep -A1000 '## Options begin #[#]' $0 |
+            grep ') [#]'
+    } | sed 's/^ *"//g; s/") # /'"\t"'/g; s/.*\*) # /*timezone\/offset*'"\t"'/g' | createTable
+}
+
 getData
 
+## Options begin ##
 case "$1" in
     "") # No parameters. Use STDIN.
         readFromSTDIN | format
     ;;
-    "reformat") # Run the CSV data through the user formatting. Useful if you've piped it through some other tools.
+    "reformat") # Format CSV data for displaying to the user. Useful after piping through something else.
         reformat
     ;;
     "same") # Display other timezones that are the same as yours.
@@ -157,10 +193,13 @@ case "$1" in
         myOffset="$(date +%Z)"
         lookup "$myOffset" | format
     ;;
-    "all")
+    "all") # List all known timezones.
         cat "$processedData" | format
     ;;
-    *) # Everything else. Assume it's a timezone.
+    "--help") # Show this help.
+        showHelp "$2"
+    ;;
+    *) # Assume it's a timezone, and look it up.
         for timezone in $@; do
             lookup "$timezone"
         done | format
