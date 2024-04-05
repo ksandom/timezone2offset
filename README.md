@@ -1,8 +1,62 @@
 # timezone2offset
 
-A command line tool to get a sorted list of UTC offsets from a list of timezone abbreviations.
+A command line tool to get a sorted list of UTC offsets, abbreviations, descriptions and times from a list of timezone abbreviations.
 
-## Examples
+## Install
+
+### Within your local user
+
+#### Install
+
+Run `./install.sh ` like this:
+
+```
+ksandom@delli:/usr/files/develop/timezone2offset$ ./install.sh
+Installing locally using symlinks to the repo dir.
+'./o2t' -> '/usr/files/develop/timezone2offset/bin/o2t'
+'./tz2o' -> '/usr/files/develop/timezone2offset/bin/tz2o'
+'./tz2t' -> '/usr/files/develop/timezone2offset/bin/tz2t'
+```
+
+#### Uninstall
+
+Run `./uninstall.sh ` like this:
+
+```
+ksandom@delli:/usr/files/develop/timezone2offset$ ./uninstall.sh
+Removing locally.
+removed '/home/ksandom/bin/o2t'
+removed '/home/ksandom/bin/tz2o'
+removed '/home/ksandom/bin/tz2t'
+```
+
+### System-wide
+
+#### Install
+
+Run `./install.sh ` like this:
+
+```
+ksandom@delli:/usr/files/develop/timezone2offset$ sudo ./install.sh
+Installing system-wide.
+'o2t' -> '/usr/bin/o2t'
+'tz2o' -> '/usr/bin/tz2o'
+'tz2t' -> '/usr/bin/tz2t'
+```
+
+#### Uninstall
+
+Run `./uninstall.sh ` like this:
+
+```
+ksandom@delli:/usr/files/develop/timezone2offset$ sudo ./uninstall.sh
+Removing system-wide.
+removed '/usr/bin/o2t'
+removed '/usr/bin/tz2o'
+removed '/usr/bin/tz2t'
+```
+
+## Examples of it in use
 
 You can give it a single parameter:
 
