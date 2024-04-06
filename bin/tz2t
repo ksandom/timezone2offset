@@ -4,7 +4,7 @@
 srcDir="$(dirname "$0")"
 
 if [ "$1" != '--help' ]; then
-    "$srcDir"/tz2o "$@" | "$srcDir"/o2t | "$srcDir"/tz2o reformat
+    "$srcDir"/tz2o "$@" | "$srcDir"/o2t
 else
     echo "List offset, timezone, description and time from a provided timezone or offset."
     "$srcDir"/tz2o --help --noHeader | sed 's/tz2o/tz2t/g'

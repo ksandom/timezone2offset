@@ -69,4 +69,9 @@ function processInput
     done
 }
 
-processInput
+if [ -t 1 ]; then
+    srcDir="$(dirname "$0")"
+    processInput | "$srcDir"/tz2o reformat
+else
+    processInput
+fi
