@@ -264,3 +264,11 @@ UTC+02  MEST          Middle European Summer Time (''same zone as CEST'')       
 UTC+02  SAST          South African Standard Time                                    01:50
 UTC+02  WAST          West Africa Summer Time                                        01:50
 ```
+
+Instead of showing the current time in the chosen timezone, you can specify a time:
+
+```
+ksandom@delli:~$ tz2o nzdt | o2t 12:34
+Offset  Abbreviation  Description                Approx time
+UTC+13  NZDT          New Zealand Daylight Time  23:34
+```
