@@ -1,16 +1,17 @@
 #!/bin/bash
-# Offset to time.
-
-myOffset="$(date +%z)"
-myODirection="${myOffset:0:1}"
-myOHour="${myOffset:1:2}"
-myOMinute="${myOffset:3:2}"
-
-myTime="$(date +%H:%M)"
-myTHour="${myTime:0:2}"
-myTMinute="${myTime:3:2}"
-
-# echo "My offset: $myOffset $myODirection $myOHour $myOMinute  $myTime $myTHour $myTMinute"
+# Add an estimated time to data provided by tz2t.
+# Syntax:
+#   $0 [timeOverrideOrOptions]
+#
+# timeOverride specifies your local time. Eg:
+#   What will the time be in NZDT at 12:34?
+#     tz2o nzdt | o2t 12:34
+#
+# It's completely fine to not specify a time. Eg:
+#   What time is it in NZDT right now?
+#     tz2o nzdt | o2t
+#   Or more simply:
+#     tz2t nzdt
 
 function applyOffset
 {
@@ -54,7 +55,10 @@ function applyOffset
             minuteWarning="*"
         fi
 
-        echo "$formattedHour:$myTMinute$minuteWarning$note"
+        minutePrefix=""
+        [ "${myTMinute:1:1}" == '' ] && minutePrefix='0'
+
+        echo "$formattedHour:$minutePrefix$myTMinute$minuteWarning$note"
     fi
 }
 
@@ -69,9 +73,67 @@ function processInput
     done
 }
 
-if [ -t 1 ]; then
-    srcDir="$(dirname "$0")"
-    processInput | "$srcDir"/tz2o reformat
-else
-    processInput
-fi
+function normalFlow
+{
+    myOffset="$(date +%z)"
+    myODirection="${myOffset:0:1}"
+    myOHour="${myOffset:1:2}"
+    myOMinute="${myOffset:3:2}"
+
+    if [ "$1" == '' ]; then
+        myTime="$(date +%H:%M)"
+    else
+        myTime="$1"
+    fi
+
+    myTHour="$(echo "$myTime" | cut -d: -f1)"
+    [ "${myTHour:0:1}" == '0' ] && myTHour="${myTHour:1:1}"
+    myTMinute="$(echo "$myTime" | cut -d: -f2)"
+    [ "${myTMinute:0:1}" == '0' ] && myTMinute="${myTMinute:1:1}"
+
+    if [ -t 1 ]; then
+        srcDir="$(dirname "$0")"
+        processInput | "$srcDir"/tz2o reformat
+    else
+        processInput
+    fi
+}
+
+function showHelp
+{
+    startFrom=1
+    if [ "$1" == '--noHeader' ]; then
+        startFrom=2
+    fi
+
+    # Show the internal documentation.
+    {
+        grep -B1000 '## End of internal documentation. ##' "$0" |
+            grep '^#' |
+            grep -v '^#!' |
+            grep -v '##' |
+            cut -b3-
+    } | sed 's/\$0/'"$(basename "$0")"'/g' | tail -n+"$startFrom"
+
+    # Show the options available.
+    echo -e "\nOptions:"
+    {
+        grep -A1000 '## Options begin #[#]' $0 |
+            grep ') [#]'
+    } | sed 's/^ *"//g; s/") # /'"\t"'/g; s/.*\*) # /*timezone\/offset*'"\t"'/g' | createTable
+}
+
+function createTable
+{
+    column -t -s"$(echo -e "\t")"
+}
+
+## Options begin ##
+case "$1" in
+    "--help") # Show this help.
+        showHelp
+    ;;
+    *)
+        normalFlow "$1"
+    ;;
+esac
